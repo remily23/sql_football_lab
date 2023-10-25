@@ -9,10 +9,10 @@ SELECT * FROM matches WHERE season = '2017';
 
 7,810 matches.
 
-
 ```
 
 2) Find all the matches featuring Barcelona.
+
 
 ```sql
 SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
@@ -20,20 +20,25 @@ SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
 608 matches.
 
 
+
 ```
 
 3) What are the names of the Scottish divisions included?
 
 ```sql
+SELECT DISTINCT name FROM divisions WHERE country = 'Scotland';
 
-
+Scottish Championship, Scottish League One, Scottish Premiership.
 
 ```
 
 4) Find the value of the `code` for the `Bundesliga` division. Use that code to find out how many matches Freiburg have played in that division. HINT: You will need to query both tables
 
 ```sql
-<!-- Copy solution here -->
+SELECT CODE FROM divisions WHERE name = 'Bundesliga';
+SELECT COUNT (*) FROM matches WHERE (hometeam = 'Freiburg' OR awayteam = 'Freiburg') AND division_code = 'D1';
+
+374 matches.
 
 
 ```
@@ -41,15 +46,17 @@ SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
 5)  Find the teams which include the word "City" in their name. HINT: Not every team has been entered into the database with their full name, eg. `Norwich City` are listed as `Norwich`. If your query is correct it should return four teams.
 
 ```sql
-<!-- Copy solution here -->
+SELECT DISTINCT hometeam FROM matches WHERE hometeam LIKE '%City%';
 
+Bath City, Bristol City, Edinburgh City, Man City
 
 ```
 
 6) How many different teams have played in matches recorded in a French division?
 
 ```sql
-<!-- Copy solution here -->
+SELECT COUNT DISTINCT code FROM divisons WHERE country = 'France'; 
+SELECT FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
 
 
 ```
@@ -57,7 +64,7 @@ SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
 7) Have Huddersfield played Swansea in any of the recorded matches?
 
 ```sql
-<!-- Copy solution here -->
+SELECT FROM matches WHERE (hometeam OR awayteam) = ('Huddersfield' OR 'Swansea') OR (awayteam or hometeam) = ('Huddersfield' OR 'Swansea');
 
 
 ```
@@ -65,7 +72,10 @@ SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
 8) How many draws were there in the `Eredivisie` between 2010 and 2015?
 
 ```sql
-<!-- Copy solution here -->
+SELECT DISTINCT code FROM division WHERE name = 'Eredivisie';
+SELECT COUNT(*) FROM matches WHERE (ftr, division_code) = ('D', 'N1');
+
+1114 draws.
 
 
 ```
