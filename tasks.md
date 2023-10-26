@@ -5,7 +5,7 @@ Each of the questions/tasks below can be answered using a `SELECT` query. When y
 1) Find all the matches from 2017.
 
 ```sql
-SELECT * FROM matches WHERE season = '2017';
+SELECT * FROM matches WHERE season = 2017;
 
 7,810 matches.
 
@@ -26,7 +26,7 @@ SELECT * FROM matches WHERE hometeam = 'Barcelona' OR awayteam = 'Barcelona';
 3) What are the names of the Scottish divisions included?
 
 ```sql
-SELECT DISTINCT name FROM divisions WHERE country = 'Scotland';
+SELECT name FROM divisions WHERE country = 'Scotland';
 
 Scottish Championship, Scottish League One, Scottish Premiership.
 
@@ -55,8 +55,8 @@ Bath City, Bristol City, Edinburgh City, Man City
 6) How many different teams have played in matches recorded in a French division?
 
 ```sql
-SELECT COUNT DISTINCT code FROM divisons WHERE country = 'France'; 
-SELECT FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
+SELECT code FROM divisons WHERE country = 'France'; 
+SELECT COUNT (DISTINCT hometeam) FROM matches WHERE division_code IN ('F1', 'F2');
 
 
 ```
@@ -64,7 +64,7 @@ SELECT FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
 7) Have Huddersfield played Swansea in any of the recorded matches?
 
 ```sql
-SELECT FROM matches WHERE (hometeam OR awayteam) = ('Huddersfield' OR 'Swansea') OR (awayteam or hometeam) = ('Huddersfield' OR 'Swansea');
+SELECT * FROM matches WHERE (hometeam = 'Huddersfield' AND awayteam = 'Swansea');
 
 
 ```
@@ -72,8 +72,8 @@ SELECT FROM matches WHERE (hometeam OR awayteam) = ('Huddersfield' OR 'Swansea')
 8) How many draws were there in the `Eredivisie` between 2010 and 2015?
 
 ```sql
-SELECT DISTINCT code FROM division WHERE name = 'Eredivisie';
-SELECT COUNT(*) FROM matches WHERE (ftr, division_code) = ('D', 'N1');
+SELECT code FROM divisions WHERE name = 'Eredivisie';
+SELECT COUNT(*) FROM matches WHERE (ftr, division_code) = ('D', 'N1') AND season BETWEEN 2010 AND 2015;
 
 1114 draws.
 
@@ -83,7 +83,8 @@ SELECT COUNT(*) FROM matches WHERE (ftr, division_code) = ('D', 'N1');
 9) Select the matches played in the Premier League in order of total goals scored (`fthg` + `ftag`) from highest to lowest. When two matches have the same total the match with more home goals (`fthg`) should come first. 
 
 ```sql
-<!-- Copy solution here -->
+SELECT code FROM divisions WHERE name = 'Premier League'; 
+SELECT * FROM matches WHERE division_code = 'E0' ORDER BY(fthg + ftag) DESC, fthg DESC;
 
 
 ```
@@ -91,8 +92,12 @@ SELECT COUNT(*) FROM matches WHERE (ftr, division_code) = ('D', 'N1');
 10) Find the name of the division in which the most goals were scored in a single season and the year in which it happened.
 
 ```sql
-<!-- Copy solution here -->
-
+SELECT division_code, season, SUM(fthg + ftag)
+FROM matches 
+GROUP BY division_code, season
+ORDER BY sum
+DESC LIMIT 1; 
+SELECT name FROM divisions WHERE code = 'EC';
 
 ```
 
